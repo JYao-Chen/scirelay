@@ -1,0 +1,13 @@
+flowchart TD
+  A[选择模块] --> B{输入路由}
+  B --> C[question / related-work / innovation]
+  B --> D[experiment / future]
+  C --> E[结构化 article.json]
+  D --> F[Markdown 正文]
+  E --> G{当前运行已有成功缓存？}
+  F --> G
+  G -- 是且配置未变 --> H[读取已有结果]
+  G -- 否或配置已变 --> I[新运行或新尝试，发送请求]
+  I --> J{响应成功且结构可读？}
+  J -- 是 --> K[保存原始响应与模块结果]
+  J -- 否 --> L[记录错误，保留其他成功模块]

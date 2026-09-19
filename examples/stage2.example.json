@@ -1,0 +1,18 @@
+{
+  "records": [
+    {
+      "field": "observed_value",
+      "sample_label": "Sample A",
+      "value": "5",
+      "unit": "units",
+      "conditions": "condition C",
+      "source_block_ids": [
+        1
+      ],
+      "evidence": "Sample A had a measured value of 5 units under condition C.",
+      "derived": false
+    }
+  ],
+  "unavailable_fields": [],
+  "limitations": []
+}

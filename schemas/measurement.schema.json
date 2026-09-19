@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Expected local extraction record",
+  "type": "object",
+  "required": [
+    "field",
+    "sample_label",
+    "value",
+    "unit",
+    "conditions",
+    "source_block_ids",
+    "evidence",
+    "derived"
+  ],
+  "properties": {
+    "field": {
+      "type": "string"
+    },
+    "sample_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": [
+        "string",
+        "number",
+        "object",
+        "array",
+        "boolean",
+        "null"
+      ],
+      "description": "Current outputs preserve raw values; schema does not claim scientific validity."
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "conditions": {
+      "type": "string"
+    },
+    "source_block_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "derived": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

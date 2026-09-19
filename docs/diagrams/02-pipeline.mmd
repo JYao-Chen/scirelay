@@ -1,0 +1,16 @@
+flowchart TD
+  A[原始 PDF] --> B[MinerU OCR]
+  B --> C[full.md / 图片 / 内容列表]
+  C --> D[内部文章对象：表格 HTML 拼入文本]
+  C --> E[服务 article.json：图表结构适配]
+  D --> F[阶段一：筛选 / 试样 / 富集区]
+  F --> G[阶段二：按领域类别抽字段]
+  G --> H[绑定来源与原始证据]
+  H --> I[core_fields]
+  E --> J[question / related-work / innovation]
+  C --> K[Markdown 上传：experiment / future]
+  J --> N[science_analysis]
+  K --> N
+  I --> R[逐篇 extraction_result.json]
+  N --> R
+  R --> T[按模板导出报告与结果文件]

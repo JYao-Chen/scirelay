@@ -1,0 +1,13 @@
+{
+  "protocol_object": {
+    "protocol_id": "example",
+    "protocol_name": "Synthetic protocol"
+  },
+  "protocol_focus_object": [],
+  "reagent_object": [],
+  "equipment_object": [],
+  "synthesis_operation_object": [],
+  "characterization_methods": [],
+  "evaluation_methods": [],
+  "result": []
+}

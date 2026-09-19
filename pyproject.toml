@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scienceengine-client"
+version = "0.1.0"
+description = "Reusable OCR and scientific literature extraction clients"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["requests>=2.32,<3"]
+
+[project.scripts]
+scienceengine = "scienceengine.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scienceengine"]
+
+[dependency-groups]
+dev = ["pytest>=8,<9", "ruff>=0.11,<1"]
+docs = ["markdown>=3.7,<4"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,37 @@
+{
+  "domain_id": "example-domain",
+  "version": "1",
+  "scope": "本文研究对象、方法与测量结果；虚构示例",
+  "categories": {
+    "object": {
+      "label": "研究对象",
+      "fields": {
+        "object_name": {
+          "label": "对象名称",
+          "value_type": "text",
+          "instruction": "原文对象名称"
+        }
+      }
+    },
+    "method": {
+      "label": "研究方法",
+      "fields": {
+        "method_name": {
+          "label": "方法名称",
+          "value_type": "text",
+          "instruction": "本文使用的方法"
+        }
+      }
+    },
+    "measurement": {
+      "label": "测量结果",
+      "fields": {
+        "observed_value": {
+          "label": "观测值",
+          "value_type": "number_or_range",
+          "instruction": "保留值、单位、条件与证据"
+        }
+      }
+    }
+  }
+}

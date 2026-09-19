@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant C as App OCR 客户端
+  participant A as MinerU API
+  participant O as 签名文件存储
+  C->>A: POST file-urls/batch + Bearer
+  A-->>C: batch_id 与 file_urls
+  C->>C: 保存批次与文件对应关系
+  C->>O: PUT 原始文件二进制
+  O-->>C: 上传响应
+  loop 按配置间隔，直到终态或任务期限
+    C->>A: GET extract-results/batch/id
+    A-->>C: 每篇 state / 错误 / full_zip_url
+    opt 某篇 done 且未下载
+      C->>O: GET full_zip_url
+      O-->>C: ZIP
+      C->>C: 校验并解压，保存产物
+    end
+  end
+  Note over C,A: failed 按具体错误决定补跑，不能默认无限重试

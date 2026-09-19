@@ -1,0 +1,11 @@
+stateDiagram-v2
+  [*] --> Queued
+  Queued --> Running: 执行器启动
+  Running --> Complete: 所选阶段全部成功或合理跳过
+  Running --> Partial: 部分成功且存在失败
+  Running --> Failed: 无可用结果且执行失败
+  Partial --> Running: 精确补跑失败阶段
+  Failed --> Running: 修正原因后重试
+  Complete --> [*]
+  Partial --> [*]
+  Failed --> [*]

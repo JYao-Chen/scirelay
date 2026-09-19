@@ -1,0 +1,46 @@
+erDiagram
+  PAPER ||--o{ OCR_BLOCK : contains
+  PAPER ||--o{ SAMPLE : registers
+  PAPER ||--o{ ZONE : selects
+  ZONE }o--o{ OCR_BLOCK : references
+  ZONE ||--o{ FIELD_RECORD : extracts
+  FIELD_RECORD }o--o{ OCR_BLOCK : cites
+  PAPER ||--o{ SCIENCE_MODULE : analyzes
+  PAPER ||--|| AGGREGATE : saves
+  AGGREGATE ||--o{ FIELD_RECORD : core_fields
+  AGGREGATE ||--o{ SCIENCE_MODULE : science_analysis
+  PAPER {
+    string paper_id
+    string title
+    string doi
+  }
+  OCR_BLOCK {
+    int paragraph_idx
+    int pagenum_zero_based
+    string head
+    string paragraph
+  }
+  SAMPLE {
+    string sample_label
+    string description
+  }
+  ZONE {
+    string category_en
+    array block_ids
+  }
+  FIELD_RECORD {
+    string field
+    string sample_label
+    string value
+    string unit
+    string conditions
+    string evidence
+  }
+  SCIENCE_MODULE {
+    string module_key
+    object raw_response
+  }
+  AGGREGATE {
+    string status
+    array errors
+  }

@@ -1,0 +1,104 @@
+{
+  "paper_id": "doc_example",
+  "run_id": "run_example",
+  "source": "article.example.json",
+  "status": "complete",
+  "science_analysis": {
+    "research_question": {
+      "extraction_result": [
+        {
+          "extraction_result_label": "research_object",
+          "label_type": "fact",
+          "extraction_result_list": [
+            {
+              "result_id": "example_1",
+              "result_value": "Example research object A",
+              "is_condensed": true,
+              "evidence_units": [
+                {
+                  "source_chapter": "Methods",
+                  "context_id": "0",
+                  "material_sentence": "Sample A was evaluated using method X.",
+                  "material_context": "Sample A was evaluated using method X."
+                }
+              ],
+              "children_extraction_result": []
+            }
+          ]
+        }
+      ]
+    },
+    "related_work": {
+      "extraction_result": [
+        {
+          "extraction_result_label": "Related_Work",
+          "extraction_result_list": [
+            {
+              "result_id": "root",
+              "result_value": "",
+              "children_extraction_result": [
+                {
+                  "extraction_result_label": "research_object",
+                  "label_type": "fact",
+                  "extraction_result_list": [
+                    {
+                      "result_id": "example_1",
+                      "result_value": "Example research object A",
+                      "is_condensed": true,
+                      "evidence_units": [
+                        {
+                          "source_chapter": "Methods",
+                          "context_id": "0",
+                          "material_sentence": "Sample A was evaluated using method X.",
+                          "material_context": "Sample A was evaluated using method X."
+                        }
+                      ],
+                      "children_extraction_result": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "experiment_process": {
+      "protocol_object": {
+        "protocol_id": "example",
+        "protocol_name": "Synthetic protocol"
+      },
+      "protocol_focus_object": [],
+      "reagent_object": [],
+      "equipment_object": [],
+      "synthesis_operation_object": [],
+      "characterization_methods": [],
+      "evaluation_methods": [],
+      "result": []
+    }
+  },
+  "core_fields": {
+    "measurement": {
+      "records": [
+        {
+          "field": "observed_value",
+          "sample_label": "Sample A",
+          "value": "5",
+          "unit": "units",
+          "conditions": "condition C",
+          "source_block_ids": [
+            1
+          ],
+          "evidence": "Sample A had a measured value of 5 units under condition C.",
+          "derived": false
+        }
+      ],
+      "unavailable_fields": [],
+      "limitations": []
+    }
+  },
+  "errors": [],
+  "provenance": {
+    "synthetic": true
+  }
+}

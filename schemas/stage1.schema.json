@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Expected stage1 output",
+  "type": "object",
+  "required": [
+    "paper_metadata",
+    "screening",
+    "sample_registry",
+    "knowledge_enrichment_zones"
+  ],
+  "properties": {
+    "paper_metadata": {
+      "type": "object"
+    },
+    "screening": {
+      "type": "object",
+      "required": [
+        "paper_type",
+        "relevance",
+        "reason",
+        "evidence_block_ids"
+      ],
+      "properties": {
+        "paper_type": {
+          "enum": [
+            "experimental",
+            "mixed_experimental_simulation",
+            "simulation",
+            "review",
+            "other"
+          ]
+        },
+        "relevance": {
+          "type": "string",
+          "description": "Domain-defined relevance; for example in_scope, supporting, out_of_scope."
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence_block_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "sample_registry": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sample_label",
+          "description",
+          "source_block_ids"
+        ]
+      }
+    },
+    "knowledge_enrichment_zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "category_en",
+          "block_ids",
+          "reason"
+        ],
+        "properties": {
+          "category_en": {
+            "type": "string",
+            "description": "Must occur in the configured domain categories."
+          },
+          "block_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "description": "Expected shape. Runtime must additionally enforce category coverage and source references."
+}

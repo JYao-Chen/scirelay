@@ -1,0 +1,36 @@
+{
+  "title": "Synthetic Example Study",
+  "authors": [],
+  "authorship": [],
+  "keywords": [],
+  "abstracts": "Synthetic data for documentation only.",
+  "references": [],
+  "paragraphs": [
+    {
+      "paragraph_idx": 0,
+      "pagenum": 0,
+      "head": "Methods",
+      "type": "body_div",
+      "paragraph": "Sample A was evaluated using method X."
+    },
+    {
+      "paragraph_idx": 1,
+      "pagenum": 0,
+      "head": "Results",
+      "type": "body_div",
+      "paragraph": "Sample A had a measured value of 5 units under condition C."
+    },
+    {
+      "paragraph_idx": 2,
+      "pagenum": 0,
+      "head": "Results",
+      "type": "body_table_div",
+      "paragraph": [
+        "Table 1. Synthetic example."
+      ],
+      "html": "<table><tr><th>Sample</th><th>Value</th></tr><tr><td>A</td><td>5</td></tr></table>",
+      "table_footnote": [],
+      "path": "images/example-table.png"
+    }
+  ]
+}

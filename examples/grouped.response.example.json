@@ -1,0 +1,24 @@
+{
+  "extraction_result": [
+    {
+      "extraction_result_label": "research_object",
+      "label_type": "fact",
+      "extraction_result_list": [
+        {
+          "result_id": "example_1",
+          "result_value": "Example research object A",
+          "is_condensed": true,
+          "evidence_units": [
+            {
+              "source_chapter": "Methods",
+              "context_id": "0",
+              "material_sentence": "Sample A was evaluated using method X.",
+              "material_context": "Sample A was evaluated using method X."
+            }
+          ],
+          "children_extraction_result": []
+        }
+      ]
+    }
+  ]
+}

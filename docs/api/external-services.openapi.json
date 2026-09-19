@@ -1,0 +1,577 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ScienceEngine App integration — external services",
+    "version": "2026-09-18",
+    "description": "App-side documentation contract. No sample-project results. Not a provider-certified OpenAPI. The local App API is a separate design, not deployed."
+  },
+  "servers": [
+    {
+      "url": "https://sciengine.las.ac.cn"
+    }
+  ],
+  "paths": {
+    "/question": {
+      "post": {
+        "operationId": "science_research_question",
+        "tags": [
+          "ScienceEngine"
+        ],
+        "summary": "research_question",
+        "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "LLM_MODEL",
+                  "LLM_API_KEY",
+                  "LLM_BASE_URL",
+                  "file"
+                ],
+                "properties": {
+                  "LLM_MODEL": {
+                    "type": "string",
+                    "example": "deepseek-v4-flash"
+                  },
+                  "LLM_API_KEY": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "LLM_BASE_URL": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.deepseek.com"
+                  },
+                  "Stream": {
+                    "type": "string",
+                    "default": "False"
+                  },
+                  "extra_input": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP success; still inspect business errors and content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error schema is not stable; preserve HTTP status and error text."
+          }
+        }
+      }
+    },
+    "/related-work": {
+      "post": {
+        "operationId": "science_related_work",
+        "tags": [
+          "ScienceEngine"
+        ],
+        "summary": "related_work",
+        "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "LLM_MODEL",
+                  "LLM_API_KEY",
+                  "LLM_BASE_URL",
+                  "file"
+                ],
+                "properties": {
+                  "LLM_MODEL": {
+                    "type": "string",
+                    "example": "deepseek-v4-flash"
+                  },
+                  "LLM_API_KEY": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "LLM_BASE_URL": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.deepseek.com"
+                  },
+                  "Stream": {
+                    "type": "string",
+                    "default": "False"
+                  },
+                  "extra_input": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP success; still inspect business errors and content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error schema is not stable; preserve HTTP status and error text."
+          }
+        }
+      }
+    },
+    "/innovation": {
+      "post": {
+        "operationId": "science_research_idea",
+        "tags": [
+          "ScienceEngine"
+        ],
+        "summary": "research_idea",
+        "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "LLM_MODEL",
+                  "LLM_API_KEY",
+                  "LLM_BASE_URL",
+                  "file"
+                ],
+                "properties": {
+                  "LLM_MODEL": {
+                    "type": "string",
+                    "example": "deepseek-v4-flash"
+                  },
+                  "LLM_API_KEY": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "LLM_BASE_URL": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.deepseek.com"
+                  },
+                  "Stream": {
+                    "type": "string",
+                    "default": "False"
+                  },
+                  "extra_input": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "application/json"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP success; still inspect business errors and content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error schema is not stable; preserve HTTP status and error text."
+          }
+        }
+      }
+    },
+    "/experiment": {
+      "post": {
+        "operationId": "science_experiment_process",
+        "tags": [
+          "ScienceEngine"
+        ],
+        "summary": "experiment_process",
+        "description": "Upload Markdown, not article.json. Client-observed contract, not provider-certified schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "LLM_MODEL",
+                  "LLM_API_KEY",
+                  "LLM_BASE_URL",
+                  "file"
+                ],
+                "properties": {
+                  "LLM_MODEL": {
+                    "type": "string",
+                    "example": "deepseek-v4-flash"
+                  },
+                  "LLM_API_KEY": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "LLM_BASE_URL": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.deepseek.com"
+                  },
+                  "Stream": {
+                    "type": "string",
+                    "default": "False"
+                  },
+                  "extra_input": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "text/markdown"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP success; still inspect business errors and content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error schema is not stable; preserve HTTP status and error text."
+          }
+        }
+      }
+    },
+    "/future": {
+      "post": {
+        "operationId": "science_future_outlook",
+        "tags": [
+          "ScienceEngine"
+        ],
+        "summary": "future_outlook",
+        "description": "Upload Markdown, not article.json. Client-observed contract, not provider-certified schema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "LLM_MODEL",
+                  "LLM_API_KEY",
+                  "LLM_BASE_URL",
+                  "file"
+                ],
+                "properties": {
+                  "LLM_MODEL": {
+                    "type": "string",
+                    "example": "deepseek-v4-flash"
+                  },
+                  "LLM_API_KEY": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "LLM_BASE_URL": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://api.deepseek.com"
+                  },
+                  "Stream": {
+                    "type": "string",
+                    "default": "False"
+                  },
+                  "extra_input": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "contentType": "text/markdown"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP success; still inspect business errors and content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error schema is not stable; preserve HTTP status and error text."
+          }
+        }
+      }
+    },
+    "/api/v4/file-urls/batch": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://mineru.net"
+          }
+        ],
+        "operationId": "mineru_create_batch",
+        "tags": [
+          "MinerU"
+        ],
+        "security": [
+          {
+            "MinerUBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "files"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "data_id": {
+                          "type": "string"
+                        },
+                        "is_ocr": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  },
+                  "model_version": {
+                    "type": "string",
+                    "examples": [
+                      "vlm",
+                      "pipeline"
+                    ]
+                  },
+                  "enable_formula": {
+                    "type": "boolean"
+                  },
+                  "enable_table": {
+                    "type": "boolean"
+                  },
+                  "language": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Check code=0, then data.batch_id and data.file_urls."
+          }
+        }
+      }
+    },
+    "/api/v4/extract-results/batch/{batch_id}": {
+      "get": {
+        "servers": [
+          {
+            "url": "https://mineru.net"
+          }
+        ],
+        "operationId": "mineru_get_batch",
+        "tags": [
+          "MinerU"
+        ],
+        "security": [
+          {
+            "MinerUBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "batch_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check code=0; data.extract_result contains per-file state and full_zip_url."
+          }
+        }
+      }
+    },
+    "/chat/completions": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://model.example.invalid/v1",
+            "description": "Placeholder for the configured domain model; not a live service."
+          }
+        ],
+        "operationId": "domain_chat",
+        "tags": [
+          "Domain LLM"
+        ],
+        "security": [
+          {
+            "ModelBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "model",
+                  "messages"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "example": "configured-model"
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "max_tokens": {
+                    "type": "integer",
+                    "examples": [
+                      7000,
+                      8192
+                    ]
+                  },
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "role",
+                        "content"
+                      ],
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Read choices[0].message.content; reject finish_reason=length; parse content as JSON."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "MinerUBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "ModelBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

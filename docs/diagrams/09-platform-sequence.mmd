@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant U as 用户界面
+  participant A as 拟议本地任务 API
+  participant W as 抽取执行器
+  participant S as 外部服务
+  participant R as 本地结果存储
+  Note over U,R: 仅设计，尚未实现或部署
+  U->>A: POST documents 上传论文
+  A-->>U: document_id
+  U->>A: POST extraction-jobs
+  A-->>U: 202 job_id
+  A->>W: 登记任务并执行
+  W->>S: OCR / 领域阶段 / 通用模块
+  S-->>W: 结果或错误
+  W->>R: 分阶段保存状态与输出
+  U->>A: GET job 状态
+  A->>R: 读取状态
+  R-->>A: 部分完成及错误
+  A-->>U: 逐篇逐模块进度
+  U->>A: POST exports
+  A->>R: 从已存结果构建精简包
+  A-->>U: 导出状态与完成后下载位置

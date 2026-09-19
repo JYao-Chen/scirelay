@@ -1,0 +1,47 @@
+{
+  "paper_metadata": {
+    "title": "Synthetic Example Study",
+    "doi": null,
+    "year": null
+  },
+  "screening": {
+    "paper_type": "experimental",
+    "relevance": "in_scope",
+    "reason": "Synthetic scope match",
+    "evidence_block_ids": [
+      0
+    ]
+  },
+  "sample_registry": [
+    {
+      "sample_label": "Sample A",
+      "description": "Synthetic object",
+      "source_block_ids": [
+        0
+      ]
+    }
+  ],
+  "knowledge_enrichment_zones": [
+    {
+      "category_en": "object",
+      "block_ids": [
+        0
+      ],
+      "reason": "Synthetic example"
+    },
+    {
+      "category_en": "method",
+      "block_ids": [
+        0
+      ],
+      "reason": "Synthetic example"
+    },
+    {
+      "category_en": "measurement",
+      "block_ids": [
+        1
+      ],
+      "reason": "Synthetic example"
+    }
+  ]
+}

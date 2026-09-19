@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant C as 本地客户端
+  participant F as 阶段缓存
+  participant S as ScienceEngine 服务
+  participant M as 配置的模型端点
+  C->>F: 查询当前模块缓存
+  alt 当前格式缓存存在
+    F-->>C: 直接返回 JSON
+  else 缓存不存在
+    C->>S: POST multipart 文件及 LLM 参数
+    Note over S,M: 内部算法不可见，仅展示服务与模型的调用边界
+    S->>M: 服务内部模型请求
+    alt 返回可用结果
+      M-->>S: 模型响应
+      S-->>C: 模块 JSON
+      C->>C: HTTP / 业务 / 结构检查
+      C->>F: 保存成功模块结果
+    else 服务内部调用超期
+      S-->>C: HTTP 500 / deadline 错误
+      C->>C: errors 中保留失败，不替换其他模块
+    end
+  end
