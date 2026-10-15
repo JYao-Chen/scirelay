@@ -3,8 +3,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from scienceengine import DomainExtractor, ModelConfig, ScienceEngineError
-from scienceengine.domain import bind_records, validate_stage1
+from scirelay import DomainExtractor, ModelConfig, SciRelayError
+from scirelay.domain import bind_records, validate_stage1
 
 
 @pytest.fixture
@@ -76,7 +76,7 @@ def test_two_stages_receive_only_selected_blocks_and_resume(data, tmp_path, monk
     client.run(path, domain, out)
     assert len(calls) == 2
     domain["version"] = "2"
-    with pytest.raises(ScienceEngineError, match="changed"):
+    with pytest.raises(SciRelayError, match="changed"):
         client.run(path, domain, out)
 
 
@@ -119,17 +119,17 @@ def test_bad_quote_and_unknown_source_kept_separately(data):
 def test_duplicate_categories_fail(data):
     _, domain, first, _, blocks = data
     first["knowledge_enrichment_zones"][1] = first["knowledge_enrichment_zones"][0]
-    with pytest.raises(ScienceEngineError):
+    with pytest.raises(SciRelayError):
         validate_stage1(first, domain["categories"], {0: blocks[0]})
 
 
 def test_truncated_response_saved_but_not_accepted(tmp_path, monkeypatch):
     body = {"choices": [{"finish_reason": "length", "message": {"content": "{"}}]}
     monkeypatch.setattr(
-        "scienceengine.domain.requests.post", lambda *a, **kw: Mock(ok=True, json=lambda: body)
+        "scirelay.domain.requests.post", lambda *a, **kw: Mock(ok=True, json=lambda: body)
     )
     raw = tmp_path / "raw.json"
-    with pytest.raises(ScienceEngineError, match="truncated"):
+    with pytest.raises(SciRelayError, match="truncated"):
         extractor()._generate("prompt", {}, 10, raw)
     assert json.loads(raw.read_text()) == body
 
@@ -137,9 +137,9 @@ def test_truncated_response_saved_but_not_accepted(tmp_path, monkeypatch):
 def test_empty_model_content_is_a_service_error(tmp_path, monkeypatch):
     body = {"choices": [{"finish_reason": "stop", "message": {"content": None}}]}
     monkeypatch.setattr(
-        "scienceengine.domain.requests.post", lambda *a, **kw: Mock(ok=True, json=lambda: body)
+        "scirelay.domain.requests.post", lambda *a, **kw: Mock(ok=True, json=lambda: body)
     )
-    with pytest.raises(ScienceEngineError, match="no text"):
+    with pytest.raises(SciRelayError, match="no text"):
         extractor()._generate("prompt", {}, 10, tmp_path / "raw.json")
 
 
@@ -150,7 +150,7 @@ def test_failed_category_resumes_without_rerunning_stage1(data, tmp_path, monkey
     def fail_category(system, payload, tokens, output):
         if "article" in payload:
             return first
-        raise ScienceEngineError("temporary model failure")
+        raise SciRelayError("temporary model failure")
 
     monkeypatch.setattr(client, "_generate", fail_category)
     out = tmp_path / "run"

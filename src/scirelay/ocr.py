@@ -9,7 +9,7 @@ from pathlib import Path
 
 import requests
 
-from .errors import PollingTimeout, ScienceEngineError, json_response
+from .errors import PollingTimeout, SciRelayError, json_response
 from .storage import file_info, open_run, write_json
 
 
@@ -37,7 +37,7 @@ class MinerUClient:
         body = json_response(response, "MinerU", (self.api_key,))
         if body.get("code") != 0 or not isinstance(body.get("data"), dict):
             message = str(body.get("msg", "missing data")).replace(self.api_key, "[REDACTED]")
-            raise ScienceEngineError(f"MinerU business error: {message}")
+            raise SciRelayError(f"MinerU business error: {message}")
         return body["data"]
 
     def create_batch(self, files: list[Path], *, model_version="vlm", language="en") -> dict:
@@ -68,7 +68,7 @@ class MinerUClient:
             )
         )
         if not data.get("batch_id") or len(data.get("file_urls", [])) != len(files):
-            raise ScienceEngineError("MinerU returned an incomplete upload URL list")
+            raise SciRelayError("MinerU returned an incomplete upload URL list")
         return data
 
     def get_batch(self, batch_id: str, *, timeout=None) -> list[dict]:
@@ -80,14 +80,14 @@ class MinerUClient:
             )
         )
         if not isinstance(data.get("extract_result"), list):
-            raise ScienceEngineError("MinerU response has no extract_result array")
+            raise SciRelayError("MinerU response has no extract_result array")
         return data["extract_result"]
 
     def upload(self, path: Path, url: str) -> None:
         with path.open("rb") as source:
             response = requests.put(url, data=source, timeout=(20, self.upload_timeout))
         if not response.ok:
-            raise ScienceEngineError(f"MinerU file upload: HTTP {response.status_code}")
+            raise SciRelayError(f"MinerU file upload: HTTP {response.status_code}")
 
     def download(self, url: str, target: Path) -> None:
         """Promote a complete unpacked document only after ZIP and Markdown checks."""
@@ -97,7 +97,7 @@ class MinerUClient:
         try:
             with requests.get(url, stream=True, timeout=(20, self.upload_timeout)) as response:
                 if not response.ok:
-                    raise ScienceEngineError(f"MinerU result download: HTTP {response.status_code}")
+                    raise SciRelayError(f"MinerU result download: HTTP {response.status_code}")
                 with archive.open("wb") as f:
                     for chunk in response.iter_content(1024 * 1024):
                         f.write(chunk)
@@ -106,20 +106,20 @@ class MinerUClient:
             staging.mkdir()
             with zipfile.ZipFile(archive) as z:
                 if z.testzip():
-                    raise ScienceEngineError("Invalid OCR ZIP member")
+                    raise SciRelayError("Invalid OCR ZIP member")
                 for member in z.namelist():
                     if not (staging / member).resolve().is_relative_to(staging.resolve()):
-                        raise ScienceEngineError("OCR ZIP member is outside the result directory")
+                        raise SciRelayError("OCR ZIP member is outside the result directory")
                 z.extractall(staging)
             markdown = list(staging.rglob("full.md"))
             if len(markdown) != 1 or not markdown[0].stat().st_size:
-                raise ScienceEngineError("OCR ZIP must contain one nonempty full.md")
+                raise SciRelayError("OCR ZIP must contain one nonempty full.md")
             root = markdown[0].parent
             if target.exists():
-                raise ScienceEngineError(f"Unregistered result directory already exists: {target}")
+                raise SciRelayError(f"Unregistered result directory already exists: {target}")
             root.rename(target)
         except zipfile.BadZipFile as exc:
-            raise ScienceEngineError("OCR download is not a complete ZIP") from exc
+            raise SciRelayError("OCR download is not a complete ZIP") from exc
         finally:
             archive.unlink(missing_ok=True)
             if staging.exists():
@@ -183,12 +183,12 @@ class MinerUClient:
                 except requests.RequestException:
                     state["files"][name]["upload_error"] = "Network upload failed; resume the run"
                     upload_errors.append(name)
-                except ScienceEngineError as exc:
+                except SciRelayError as exc:
                     state["files"][name]["upload_error"] = str(exc)
                     upload_errors.append(name)
                 write_json(output / "run.json", state)
             if upload_errors:
-                raise ScienceEngineError("Upload failed for: " + ", ".join(upload_errors))
+                raise SciRelayError("Upload failed for: " + ", ".join(upload_errors))
         deadline = time.monotonic() + max_wait
         while True:
             incomplete = [
@@ -216,7 +216,7 @@ class MinerUClient:
                     target = output / row["directory"]
                     if row["downloaded"]:
                         if not (target / "full.md").is_file():
-                            raise ScienceEngineError(
+                            raise SciRelayError(
                                 "Saved OCR output is missing; restore it or use a new run"
                             )
                     elif (target / "full.md").is_file():

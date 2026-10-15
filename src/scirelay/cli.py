@@ -6,7 +6,7 @@ from pathlib import Path
 import requests
 
 from . import DomainExtractor, MinerUClient, ModelConfig, ScienceClient, prepare_document
-from .errors import ScienceEngineError
+from .errors import SciRelayError
 from .science import MODULES
 from .storage import read_json
 
@@ -27,7 +27,7 @@ def main(argv=None):
     prep = commands.add_parser("prepare", help="Adapt one OCR document")
     prep.add_argument("input", type=Path)
     prep.add_argument("--output", required=True, type=Path)
-    extract = commands.add_parser("extract", help="Run or resume ScienceEngine modules")
+    extract = commands.add_parser("extract", help="Run or resume SciEngine modules")
     extract.add_argument("input", type=Path)
     extract.add_argument("--output", required=True, type=Path)
     extract.add_argument("--modules", nargs="+", choices=list(MODULES))
@@ -143,6 +143,6 @@ def main(argv=None):
     except KeyError as exc:
         print(f"Missing configuration or response field: {exc}", file=sys.stderr)
         return 2
-    except (ScienceEngineError, ValueError, OSError) as exc:
+    except (SciRelayError, ValueError, OSError) as exc:
         print(str(exc), file=sys.stderr)
         return 1

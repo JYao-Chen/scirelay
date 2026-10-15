@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .errors import ScienceEngineError
+from .errors import SciRelayError
 
 
 def read_json(path: Path) -> Any:
@@ -24,12 +24,10 @@ def open_run(output: Path, config: dict) -> dict:
     if path.exists():
         state = read_json(path)
         if state["config"] != config:
-            raise ScienceEngineError(
-                "Run configuration or input changed; choose a new output directory"
-            )
+            raise SciRelayError("Run configuration or input changed; choose a new output directory")
         return state
     if output.exists() and any(output.iterdir()):
-        raise ScienceEngineError("Output directory is not empty and has no run.json")
+        raise SciRelayError("Output directory is not empty and has no run.json")
     state = {"config": config, "status": "running"}
     write_json(path, state)
     return state
@@ -38,6 +36,6 @@ def open_run(output: Path, config: dict) -> dict:
 def file_info(path: Path) -> dict:
     path = path.resolve()
     if not path.is_file():
-        raise ScienceEngineError(f"Input file does not exist: {path}")
+        raise SciRelayError(f"Input file does not exist: {path}")
     stat = path.stat()
     return {"path": str(path), "size": stat.st_size, "mtime_ns": stat.st_mtime_ns}

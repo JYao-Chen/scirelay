@@ -6,7 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import pytest
 
-from scienceengine import MinerUClient, PollingTimeout
+from scirelay import MinerUClient, PollingTimeout
 
 
 @pytest.fixture
@@ -132,14 +132,14 @@ def test_duplicate_filenames_rejected_before_submission(tmp_path):
 def test_non_zip_download_not_promoted(tmp_path, monkeypatch):
     from unittest.mock import MagicMock
 
-    from scienceengine import ScienceEngineError
+    from scirelay import SciRelayError
 
     response = MagicMock(ok=True)
     response.__enter__.return_value = response
     response.iter_content.return_value = [b"<html>not a ZIP</html>"]
-    monkeypatch.setattr("scienceengine.ocr.requests.get", lambda *a, **kw: response)
+    monkeypatch.setattr("scirelay.ocr.requests.get", lambda *a, **kw: response)
     target = tmp_path / "document"
-    with pytest.raises(ScienceEngineError, match="ZIP"):
+    with pytest.raises(SciRelayError, match="ZIP"):
         MinerUClient("test").download("https://example.invalid", target)
     assert not target.exists()
     assert not list(tmp_path.glob("*.zip"))

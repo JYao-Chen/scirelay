@@ -1,6 +1,6 @@
 import json
 
-from scienceengine import prepare_document
+from scirelay import prepare_document
 
 
 def test_table_image_and_stable_block_ids(tmp_path):

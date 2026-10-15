@@ -1,6 +1,6 @@
 # 9. 可复用 SDK 与命令行（已实现）
 
-本章描述仓库当前可运行代码，而非第 7 章拟议的 Web API。包名 scienceengine-client，导入名 scienceengine，命令行名 scienceengine。Python >=3.12，运行时仅依赖 requests。
+本章描述仓库当前可运行代码，而非第 7 章拟议的 Web API。包名 scirelay，导入名 scirelay，命令行名 scirelay。Python >=3.12，运行时仅依赖 requests。
 
 ## 9.1 公共 API
 
@@ -47,7 +47,7 @@ run.json 记录输入路径、大小、mtime_ns、公开模型参数与完整领
 
 ## 9.5 异常与退出码
 
-- ScienceEngineError：业务、格式、缓存配置或抽取调用失败。
+- SciRelayError：业务、格式、缓存配置或抽取调用失败。
 - PollingTimeout：OCR 仍未终态，可续跑同一目录。
 - requests.RequestException：OCR 网络调用未完成，调用者决定何时续跑；异常可能携带签名 URL，不直接记入公开日志。
 - ValueError：无效参数或输入。
@@ -58,7 +58,7 @@ CLI 捕获上述常见失败，成功/skipped 退出 0，partial/failed 退出 1
 ## 9.6 代码结构与维护
 
 ```text
-src/scienceengine/
+src/scirelay/
   config.py      # 模型配置
   ocr.py         # MinerU 批次完整生命周期
   document.py    # OCR 到两种 article 的适配

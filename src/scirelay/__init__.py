@@ -3,7 +3,7 @@
 from .config import ModelConfig
 from .document import prepare_document
 from .domain import DomainExtractor
-from .errors import PollingTimeout, ScienceEngineError
+from .errors import PollingTimeout, SciRelayError
 from .ocr import MinerUClient
 from .science import MODULES, ScienceClient
 
@@ -13,7 +13,7 @@ __all__ = [
     "ScienceClient",
     "DomainExtractor",
     "prepare_document",
-    "ScienceEngineError",
+    "SciRelayError",
     "PollingTimeout",
     "MODULES",
 ]

@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "ScienceEngine App integration — external services",
+    "title": "SciEngine App integration — external services",
     "version": "2026-09-18",
     "description": "App-side documentation contract. No sample-project results. Not a provider-certified OpenAPI. The local App API is a separate design, not deployed."
   },
@@ -15,7 +15,7 @@
       "post": {
         "operationId": "science_research_question",
         "tags": [
-          "ScienceEngine"
+          "SciEngine"
         ],
         "summary": "research_question",
         "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
@@ -89,7 +89,7 @@
       "post": {
         "operationId": "science_related_work",
         "tags": [
-          "ScienceEngine"
+          "SciEngine"
         ],
         "summary": "related_work",
         "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
@@ -163,7 +163,7 @@
       "post": {
         "operationId": "science_research_idea",
         "tags": [
-          "ScienceEngine"
+          "SciEngine"
         ],
         "summary": "research_idea",
         "description": "Upload service-adapted article.json. Client-observed contract, not provider-certified schema.",
@@ -237,7 +237,7 @@
       "post": {
         "operationId": "science_experiment_process",
         "tags": [
-          "ScienceEngine"
+          "SciEngine"
         ],
         "summary": "experiment_process",
         "description": "Upload Markdown, not article.json. Client-observed contract, not provider-certified schema.",
@@ -311,7 +311,7 @@
       "post": {
         "operationId": "science_future_outlook",
         "tags": [
-          "ScienceEngine"
+          "SciEngine"
         ],
         "summary": "future_outlook",
         "description": "Upload Markdown, not article.json. Client-observed contract, not provider-certified schema.",

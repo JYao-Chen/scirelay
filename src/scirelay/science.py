@@ -1,4 +1,4 @@
-"""Five-module ScienceEngine client and resumable per-document extraction."""
+"""Five-module SciEngine client and resumable per-document extraction."""
 
 import math
 from collections import deque
@@ -12,7 +12,7 @@ from time import monotonic
 import requests
 
 from .config import ModelConfig
-from .errors import ScienceEngineError, error_text, json_response
+from .errors import SciRelayError, error_text, json_response
 from .storage import file_info, open_run, read_json, write_json
 
 MODULES = {
@@ -36,20 +36,18 @@ EXPERIMENT_KEYS = (
 
 def validate_payload(body: dict, module: str) -> dict:
     if not isinstance(body, dict):
-        raise ScienceEngineError("Expected a JSON object")
+        raise SciRelayError("Expected a JSON object")
     if body.get("success") is False or body.get("code") not in (None, 0, 200, "0", "200"):
-        raise ScienceEngineError(
+        raise SciRelayError(
             "Upstream business failure: " + str(body.get("msg", body.get("message", "")))
         )
     if body.get("error") and not any(k in body for k in ("data", "result", "content")):
-        raise ScienceEngineError("Upstream error: " + str(body["error"]))
+        raise SciRelayError("Upstream error: " + str(body["error"]))
     if body.get("_extraction_warnings"):
-        raise ScienceEngineError(
-            "Upstream extraction warning: " + str(body["_extraction_warnings"])
-        )
+        raise SciRelayError("Upstream extraction warning: " + str(body["_extraction_warnings"]))
     if module == "experiment_process":
         if not any(body.get(key) for key in EXPERIMENT_KEYS):
-            raise ScienceEngineError("Empty experiment response")
+            raise SciRelayError("Empty experiment response")
     else:
         groups = body.get("extraction_result")
         if not isinstance(groups, list) or not any(
@@ -58,7 +56,7 @@ def validate_payload(body: dict, module: str) -> dict:
             and g["extraction_result_list"]
             for g in groups
         ):
-            raise ScienceEngineError("Missing or empty extraction_result groups")
+            raise SciRelayError("Missing or empty extraction_result groups")
     return body
 
 
@@ -134,10 +132,10 @@ class ScienceClient:
                     },
                     timeout=(20, self.module_timeouts.get(module, self.timeout)),
                 )
-            body = json_response(response, "ScienceEngine", (self.config.api_key,))
+            body = json_response(response, "SciEngine", (self.config.api_key,))
             return validate_payload(body, module)
-        except (requests.RequestException, ScienceEngineError) as exc:
-            raise ScienceEngineError(error_text(exc, (self.config.api_key,))) from None
+        except (requests.RequestException, SciRelayError) as exc:
+            raise SciRelayError(error_text(exc, (self.config.api_key,))) from None
 
     def _prepare(self, document_dir, output, selected, optional, deferred):
         document_dir, output = Path(document_dir), Path(output)
@@ -175,7 +173,7 @@ class ScienceClient:
                     result["science_analysis"][module] = validate_payload(read_json(cache), module)
                     result["module_status"][module] = "cached"
                     continue
-                except (ScienceEngineError, ValueError, OSError) as exc:
+                except (SciRelayError, ValueError, OSError) as exc:
                     # A corrupt cache is not silently accepted or automatically resubmitted.
                     result["module_status"][module] = "failed"
                     result["errors"].append(
@@ -215,7 +213,7 @@ class ScienceClient:
         try:
             body = validate_payload(self.extract(module, file), module)
             error = None
-        except (ScienceEngineError, ValueError, OSError) as exc:
+        except (SciRelayError, ValueError, OSError) as exc:
             body, error = None, error_text(exc, (self.config.api_key,))
         return body, {
             "module": module,
@@ -427,7 +425,7 @@ class ScienceClient:
                 )
                 context["result"]["paper_id"] = paper_id
                 contexts.append(context)
-            except (ScienceEngineError, ValueError, OSError) as exc:
+            except (SciRelayError, ValueError, OSError) as exc:
                 failures[paper_id] = {
                     "status": "failed",
                     "error": error_text(exc, (self.config.api_key,)),

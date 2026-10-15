@@ -4,8 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
-from scienceengine import ModelConfig, ScienceClient
-from scienceengine.science import MODULES
+from scirelay import ModelConfig, ScienceClient
+from scirelay.science import MODULES
 
 
 def main():

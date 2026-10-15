@@ -6,8 +6,8 @@ Manifest paths are relative to the manifest. No OCR or domain model is called.
 import argparse
 from pathlib import Path
 
-from scienceengine import ModelConfig, ScienceClient
-from scienceengine.storage import read_json
+from scirelay import ModelConfig, ScienceClient
+from scirelay.storage import read_json
 
 
 def main():

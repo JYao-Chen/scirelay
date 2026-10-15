@@ -3,11 +3,11 @@
 import requests
 
 
-class ScienceEngineError(RuntimeError):
+class SciRelayError(RuntimeError):
     """A service call, input contract, or saved run could not be completed."""
 
 
-class PollingTimeout(ScienceEngineError):
+class PollingTimeout(SciRelayError):
     """OCR is still running; resume using the same output directory."""
 
 
@@ -22,11 +22,11 @@ def error_text(exc: Exception, secrets: tuple[str, ...] = ()) -> str:
 def json_response(response: requests.Response, service: str, secrets=()) -> dict:
     if not response.ok:
         message = error_text(RuntimeError(response.text), secrets)
-        raise ScienceEngineError(f"{service}: HTTP {response.status_code}: {message}")
+        raise SciRelayError(f"{service}: HTTP {response.status_code}: {message}")
     try:
         body = response.json()
     except ValueError as exc:
-        raise ScienceEngineError(f"{service}: response is not JSON") from exc
+        raise SciRelayError(f"{service}: response is not JSON") from exc
     if not isinstance(body, dict):
-        raise ScienceEngineError(f"{service}: expected a JSON object")
+        raise SciRelayError(f"{service}: expected a JSON object")
     return body

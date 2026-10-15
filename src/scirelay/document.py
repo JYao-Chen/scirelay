@@ -1,9 +1,9 @@
-"""Adapt MinerU content blocks to ScienceEngine and internal domain input."""
+"""Adapt MinerU content blocks to SciEngine and internal domain input."""
 
 import shutil
 from pathlib import Path
 
-from .errors import ScienceEngineError
+from .errors import SciRelayError
 from .storage import read_json, write_json
 
 
@@ -11,10 +11,10 @@ def prepare_document(ocr_dir: str | Path, output: str | Path) -> dict:
     ocr_dir, output = Path(ocr_dir), Path(output)
     candidates = sorted(ocr_dir.glob("*_content_list.json"))
     if len(candidates) != 1 or not (ocr_dir / "full.md").is_file():
-        raise ScienceEngineError("Expected full.md and exactly one *_content_list.json")
+        raise SciRelayError("Expected full.md and exactly one *_content_list.json")
     content = read_json(candidates[0])
     if not isinstance(content, list):
-        raise ScienceEngineError("OCR content list must be an array")
+        raise SciRelayError("OCR content list must be an array")
     markdown = (ocr_dir / "full.md").read_text(encoding="utf-8")
     title = next(
         (line[2:].strip() for line in markdown.splitlines() if line.startswith("# ")), ocr_dir.name

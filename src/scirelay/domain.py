@@ -8,7 +8,7 @@ from pathlib import Path
 import requests
 
 from .config import ModelConfig
-from .errors import ScienceEngineError, error_text, json_response
+from .errors import SciRelayError, error_text, json_response
 from .storage import file_info, open_run, read_json, write_json
 
 PROMPT_VERSION = "1"
@@ -48,40 +48,40 @@ def validate_domain(domain: dict) -> None:
 def validate_stage1(result: dict, categories: dict, lookup: dict) -> None:
     for key in ("paper_metadata", "screening"):
         if not isinstance(result.get(key), dict):
-            raise ScienceEngineError(f"Stage 1 missing {key} object")
+            raise SciRelayError(f"Stage 1 missing {key} object")
     if result["screening"].get("relevance") not in {"in_scope", "supporting", "out_of_scope"}:
-        raise ScienceEngineError("Stage 1 invalid relevance")
+        raise SciRelayError("Stage 1 invalid relevance")
     if not isinstance(result.get("sample_registry"), list):
-        raise ScienceEngineError("Stage 1 missing sample_registry")
+        raise SciRelayError("Stage 1 missing sample_registry")
     zones = result.get("knowledge_enrichment_zones")
     if not isinstance(zones, list) or any(not isinstance(z, dict) for z in zones):
-        raise ScienceEngineError("Stage 1 missing zones array")
+        raise SciRelayError("Stage 1 missing zones array")
     names = [z.get("category_en") for z in zones]
     if (
         any(not isinstance(n, str) for n in names)
         or len(names) != len(categories)
         or set(names) != set(categories)
     ):
-        raise ScienceEngineError("Stage 1 must contain every category exactly once")
+        raise SciRelayError("Stage 1 must contain every category exactly once")
     for zone in zones:
         ids = zone.get("block_ids")
         if not isinstance(ids, list) or any(type(i) is not int or i not in lookup for i in ids):
-            raise ScienceEngineError("Stage 1 references an unknown block")
+            raise SciRelayError("Stage 1 references an unknown block")
 
 
 def bind_records(result: dict, fields: dict, blocks: list[dict]) -> dict:
     if not isinstance(result.get("records"), list):
-        raise ScienceEngineError("Stage 2 missing records array")
+        raise SciRelayError("Stage 2 missing records array")
     for key in ("unavailable_fields", "limitations"):
         if not isinstance(result.get(key), list):
-            raise ScienceEngineError(f"Stage 2 missing {key} array")
+            raise SciRelayError(f"Stage 2 missing {key} array")
     if any(not isinstance(f, str) or f not in fields for f in result["unavailable_fields"]):
-        raise ScienceEngineError("Stage 2 unknown unavailable field")
+        raise SciRelayError("Stage 2 unknown unavailable field")
     lookup = {p["paragraph_idx"]: p for p in blocks}
     accepted, flagged = [], []
     for raw in result["records"]:
         if not isinstance(raw, dict):
-            raise ScienceEngineError("Stage 2 record must be an object")
+            raise SciRelayError("Stage 2 record must be an object")
         record = dict(raw)
         issues = []
         required = {
@@ -171,18 +171,16 @@ class DomainExtractor:
             write_json(raw_path, body)
             choice = body["choices"][0]
             if choice.get("finish_reason") == "length":
-                raise ScienceEngineError(
-                    "Model output truncated; adjust output budget or input scope"
-                )
+                raise SciRelayError("Model output truncated; adjust output budget or input scope")
             content = choice["message"]["content"]
             if not isinstance(content, str) or not content.strip():
-                raise ScienceEngineError("Model returned no text content")
+                raise SciRelayError("Model returned no text content")
             text = content.strip()
             text = re.sub(r"^```(?:json)?\s*", "", text)
             text = re.sub(r"\s*```$", "", text)
             result = json.loads(text)
             if not isinstance(result, dict):
-                raise ScienceEngineError("Model output must be a JSON object")
+                raise SciRelayError("Model output must be a JSON object")
             return result
         except (
             requests.RequestException,
@@ -190,9 +188,9 @@ class DomainExtractor:
             IndexError,
             TypeError,
             ValueError,
-            ScienceEngineError,
+            SciRelayError,
         ) as exc:
-            raise ScienceEngineError(error_text(exc, (self.config.api_key,))) from None
+            raise SciRelayError(error_text(exc, (self.config.api_key,))) from None
 
     def run(self, blocks_file, domain, output, *, workers=3) -> dict:
         if workers < 1:
@@ -250,7 +248,7 @@ class DomainExtractor:
             validate_stage1(stage1, categories, lookup)
             write_json(first, stage1)
             result.update(stage1)
-        except (ScienceEngineError, ValueError, OSError) as exc:
+        except (SciRelayError, ValueError, OSError) as exc:
             result.update(
                 status="failed",
                 errors=[{"stage": "stage1", "error": error_text(exc, (self.config.api_key,))}],
@@ -299,7 +297,7 @@ class DomainExtractor:
                     category = jobs[future]
                     try:
                         result["core_fields"][category] = future.result()
-                    except (ScienceEngineError, ValueError, OSError) as exc:
+                    except (SciRelayError, ValueError, OSError) as exc:
                         result["errors"].append(
                             {"stage": category, "error": error_text(exc, (self.config.api_key,))}
                         )

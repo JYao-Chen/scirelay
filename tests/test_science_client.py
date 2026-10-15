@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from scienceengine import ModelConfig, ScienceClient, ScienceEngineError
-from scienceengine.science import MODULES, validate_payload
+from scirelay import ModelConfig, ScienceClient, SciRelayError
+from scirelay.science import MODULES, validate_payload
 
 
 @pytest.fixture
@@ -32,13 +32,13 @@ def test_file_routing_and_form(tmp_path, monkeypatch, config, module):
         assert kwargs["timeout"] == (20, 600)
         return Mock(ok=True, json=lambda: payload(module))
 
-    monkeypatch.setattr("scienceengine.science.requests.post", post)
+    monkeypatch.setattr("scirelay.science.requests.post", post)
     assert ScienceClient(config).extract(module, source) == payload(module)
 
 
 def test_future_rejects_json_before_network(tmp_path, monkeypatch, config):
     post = Mock()
-    monkeypatch.setattr("scienceengine.science.requests.post", post)
+    monkeypatch.setattr("scirelay.science.requests.post", post)
     with pytest.raises(ValueError, match="requires .md"):
         ScienceClient(config).extract("future_outlook", tmp_path / "article.json")
     post.assert_not_called()
@@ -58,7 +58,7 @@ def test_future_rejects_json_before_network(tmp_path, monkeypatch, config):
     ],
 )
 def test_rejects_business_and_structural_errors(body):
-    with pytest.raises(ScienceEngineError):
+    with pytest.raises(SciRelayError):
         validate_payload(body, "research_question")
 
 
@@ -76,7 +76,7 @@ def test_recursive_container_and_experiment():
         "related_work",
     )
     assert validate_payload({"result": [{"value": "example"}]}, "experiment_process")
-    with pytest.raises(ScienceEngineError):
+    with pytest.raises(SciRelayError):
         validate_payload({"result": []}, "experiment_process")
 
 
@@ -91,7 +91,7 @@ def test_partial_resume_and_config_change(tmp_path, monkeypatch, config):
     def extract(module, file):
         called.append(module)
         if module == "related_work":
-            raise ScienceEngineError("deadline exceeded")
+            raise SciRelayError("deadline exceeded")
         return payload(module)
 
     monkeypatch.setattr(client, "extract", extract)
@@ -109,7 +109,7 @@ def test_partial_resume_and_config_change(tmp_path, monkeypatch, config):
     assert called == ["related_work"]
     assert config.api_key not in (out / "run.json").read_text()
     (document / "article.json").write_text('{"changed":true}')
-    with pytest.raises(ScienceEngineError, match="changed"):
+    with pytest.raises(SciRelayError, match="changed"):
         client.run(document, out, modules=modules)
 
 
@@ -117,8 +117,8 @@ def test_secret_redaction(tmp_path, monkeypatch, config):
     file = tmp_path / "full.md"
     file.write_text("# Test")
     response = Mock(ok=False, status_code=500, text="echo " + config.api_key)
-    monkeypatch.setattr("scienceengine.science.requests.post", lambda *a, **kw: response)
-    with pytest.raises(ScienceEngineError) as error:
+    monkeypatch.setattr("scirelay.science.requests.post", lambda *a, **kw: response)
+    with pytest.raises(SciRelayError) as error:
         ScienceClient(config).extract("future_outlook", file)
     assert config.api_key not in str(error.value)
     assert config.api_key not in repr(config)

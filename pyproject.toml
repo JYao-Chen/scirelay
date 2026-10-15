@@ -3,18 +3,18 @@ requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [project]
-name = "scienceengine-client"
-version = "0.2.0"
-description = "Reusable OCR and scientific literature extraction clients"
+name = "scirelay"
+version = "0.3.0"
+description = "SciRelay: resumable literature extraction with fair scheduling and SciEngine integration"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["requests>=2.32,<3"]
 
 [project.scripts]
-scienceengine = "scienceengine.cli:main"
+scirelay = "scirelay.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/scienceengine"]
+packages = ["src/scirelay"]
 
 [dependency-groups]
 dev = ["pytest>=8,<9", "ruff>=0.11,<1"]

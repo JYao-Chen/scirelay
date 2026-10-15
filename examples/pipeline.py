@@ -8,7 +8,7 @@ import argparse
 import json
 from pathlib import Path
 
-from scienceengine import (
+from scirelay import (
     MODULES,
     DomainExtractor,
     MinerUClient,
@@ -16,7 +16,7 @@ from scienceengine import (
     ScienceClient,
     prepare_document,
 )
-from scienceengine.storage import read_json, write_json
+from scirelay.storage import read_json, write_json
 
 
 def main():

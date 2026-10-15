@@ -5,8 +5,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from scienceengine import ModelConfig, ScienceClient, ScienceEngineError
-from scienceengine.cli import main
+from scirelay import ModelConfig, ScienceClient, SciRelayError
+from scirelay.cli import main
 
 
 def payload(module):
@@ -54,7 +54,7 @@ def test_deferred_resume_and_optional_failure(tmp_path, monkeypatch, client):
     assert "test-secret" not in json.dumps(second)
 
     def fail(module, file):
-        raise ScienceEngineError("test-secret deadline")
+        raise SciRelayError("test-secret deadline")
 
     monkeypatch.setattr(client, "extract", fail)
     failed = client.run(
@@ -133,7 +133,7 @@ def test_batch_resume_and_invalid_document(tmp_path, monkeypatch, client):
     second = client.run_batch(docs, out)
     assert calls == ["related_work"]
     assert second["papers"]["good"]["status"] == "complete"
-    with pytest.raises(ScienceEngineError, match="changed"):
+    with pytest.raises(SciRelayError, match="changed"):
         client.run_batch({"different": docs["good"]}, out)
     with pytest.raises(ValueError, match="safe"):
         client.run_batch({"../escape": docs["good"]}, tmp_path / "unsafe")
@@ -161,7 +161,7 @@ def test_per_module_timeout_and_global_budget(tmp_path, monkeypatch):
             active -= 1
         return Mock(ok=True, json=lambda: payload(module))
 
-    monkeypatch.setattr("scienceengine.science.requests.post", post)
+    monkeypatch.setattr("scirelay.science.requests.post", post)
     with ThreadPoolExecutor(max_workers=4) as pool:
         futures = [
             pool.submit(client.extract, m, doc / "article.json")
@@ -261,7 +261,7 @@ def test_shared_http_budget_blocks_overlapping_direct_calls(tmp_path, monkeypatc
             second_entered.set()
         return Mock(ok=True, json=lambda: payload("research_question"))
 
-    monkeypatch.setattr("scienceengine.science.requests.post", post)
+    monkeypatch.setattr("scirelay.science.requests.post", post)
     with ThreadPoolExecutor(max_workers=2) as pool:
         first = pool.submit(client.extract, "research_question", doc / "article.json")
         assert entered.wait(5)
@@ -347,7 +347,7 @@ def test_repeated_failures_defer_remaining_requests(tmp_path, monkeypatch, clien
     def extract(module, file):
         if module == "research_idea":
             failed_calls.append(file)
-            raise ScienceEngineError("upstream unavailable")
+            raise SciRelayError("upstream unavailable")
         return payload(module)
 
     monkeypatch.setattr(client, "extract", extract)

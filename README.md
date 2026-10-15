@@ -1,12 +1,14 @@
 <div align="center">
 
-# ScienceEngine
+# SciRelay
 
 **文献 OCR · 通用分析 · 可配置领域抽取**
 
-Python SDK & CLI · v0.2.0 · Python 3.12+
+Python SDK & CLI · v0.3.0 · Python 3.12+
 
 从 PDF 到结构化结果；批量运行时隔离慢模块，保留成功阶段，按需补齐缺项。
+
+SciEngine 的非官方调用 SDK，包含 MinerU OCR 与可配置领域抽取。
 
 [快速开始](#quickstart) · [批量调度](#scheduling) · [Python 接入](#python-api) · [参数速查](#options) · [开发手册](docs/开发手册.md)
 
@@ -14,9 +16,24 @@ Python SDK & CLI · v0.2.0 · Python 3.12+
 
 ---
 
+## 名称与迁移
+
+**SciRelay** 是本项目，**SciEngine** 是它调用的外部通用分析服务。两者分别维护，本项目不是 SciEngine 官方 SDK，也不包含服务端实现。
+
+v0.3.0 起统一更名：仓库 `JYao-Chen/scirelay`、安装包 `scirelay`、导入名 `scirelay`、命令 `scirelay`。旧版 `scienceengine-client` / `scienceengine` 不提供兼容入口，使用方需更新依赖、导入与启动命令。通用客户端类仍叫 `ScienceClient`；公共异常改为 `SciRelayError`。
+
+已有克隆更新远端地址即可；本地目录名不影响包名，无需移动目录：
+
+```bash
+git remote set-url origin git@github.com:JYao-Chen/scirelay.git
+uv sync --locked
+```
+
+成功缓存的数据结构未因更名变化，仍受输入、模型、服务和模块集合的一致性检查约束。
+
 ## 适用范围
 
-ScienceEngine 是一个可独立使用的文献处理调用包：通过 MinerU 处理 PDF，调用外部 SciEngine 服务完成五类通用分析，也可直接调用模型，按业务字段配置执行两阶段领域抽取。
+SciRelay 是一个可独立使用的文献处理调用包：通过 MinerU 处理 PDF，调用外部 SciEngine 服务完成五类通用分析，也可直接调用模型，按业务字段配置执行两阶段领域抽取。
 
 已有 OCR 文档时可以直接抽取；只需要通用分析时，不必配置领域字段。SDK 提供类接口、命令行、批量示例和本地文件缓存，不启动 Web 服务。
 
@@ -47,11 +64,11 @@ ScienceEngine 是一个可独立使用的文献处理调用包：通过 MinerU �
 
 ### 安装与配置
 
-仓库为私有仓库，需要 GitHub 访问权限。包名是 `scienceengine-client`，Python 导入名和命令名为 `scienceengine`；尚未发布到 PyPI。
+仓库为私有仓库，需要 GitHub 访问权限。包名是 `scirelay`，Python 导入名和命令名为 `scirelay`；尚未发布到 PyPI。
 
 ```bash
-git clone git@github.com:JYao-Chen/scienceengine.git
-cd scienceengine
+git clone git@github.com:JYao-Chen/scirelay.git
+cd scirelay
 uv sync --locked
 cp .env.example .env
 ```
@@ -77,28 +94,28 @@ SDK 不自动读取 `.env`；下文通过 `uv run --env-file .env` 加载，也�
 在其他 Python 项目中安装：
 
 ```bash
-uv add "scienceengine-client @ git+ssh://git@github.com/JYao-Chen/scienceengine.git"
+uv add "scirelay @ git+ssh://git@github.com/JYao-Chen/scirelay.git"
 ```
 
-Git 安装取得已推送的版本。使用尚未推送的本地改动时，可在目标项目通过 `uv add /absolute/path/to/scienceengine` 安装本地包。
+Git 安装取得已推送的版本。使用尚未推送的本地改动时，可在目标项目通过 `uv add /absolute/path/to/scirelay` 安装本地包。
 
 ### 从一篇 PDF 开始
 
 ```bash
 # 1. OCR：也支持递归扫描 PDF 目录
-uv run --env-file .env scienceengine ocr /path/to/paper.pdf \
+uv run --env-file .env scirelay ocr /path/to/paper.pdf \
   --output runs/demo/ocr
 
 # 2. 适配：doc_0000 的原文件名映射见 OCR 的 run.json
-uv run scienceengine prepare runs/demo/ocr/papers/doc_0000 \
+uv run scirelay prepare runs/demo/ocr/papers/doc_0000 \
   --output runs/demo/document
 
 # 3. 五类通用分析
-uv run --env-file .env scienceengine extract runs/demo/document \
+uv run --env-file .env scirelay extract runs/demo/document \
   --output runs/demo/science
 
 # 4. 查看已保存的结果与状态
-uv run scienceengine status runs/demo/science
+uv run scirelay status runs/demo/science
 ```
 
 OCR 单批支持 1–200 个 PDF，文件名须唯一；更大数据集自行分批。已上传或已下载的项目在续跑时跳过，不隐式重建收费批次。OCR 的 `--max-wait` 只限制轮询等待，不包括上传和下载。
@@ -115,10 +132,10 @@ OCR 单批支持 1–200 个 PDF，文件名须唯一；更大数据集自行分
 ```
 
 ```bash
-uv run --env-file .env scienceengine batch documents.json \
+uv run --env-file .env scirelay batch documents.json \
   --output runs/batch --workers 10 --max-concurrency 10
 
-uv run scienceengine status runs/batch
+uv run scirelay status runs/batch
 ```
 
 默认收集全部五个模块。批次中单篇输入无效时会记录失败，其余有效论文继续执行。论文 ID 用作输出目录名，支持英文字母、数字、下划线、连字符、内部空格和点，禁止路径穿越及尾部空格或点。
@@ -158,11 +175,11 @@ flowchart LR
 
 ```bash
 # 首轮：自动延后任意疑似阻塞模块的待发任务
-uv run --env-file .env scienceengine batch documents.json --output runs/batch \
+uv run --env-file .env scirelay batch documents.json --output runs/batch \
   --slow-after 120 --failure-threshold 2 --blocked-action defer
 
 # 后续：原目录补缺，默认降并发并继续执行，不再自动延后
-uv run --env-file .env scienceengine batch documents.json --output runs/batch
+uv run --env-file .env scirelay batch documents.json --output runs/batch
 ```
 
 失败或自动延后的**必需模块**仍算缺项，结果为 `partial`。此命令能优先产出其他模块的结果，不会把不完整结果报成完整。
@@ -172,11 +189,11 @@ uv run --env-file .env scienceengine batch documents.json --output runs/batch
 `optional_modules` 定义完成条件，`deferred_modules` 控制是否发请求，两者独立。以下仅以未来展望为例，所有模块都支持相同策略：
 
 ```bash
-uv run --env-file .env scienceengine batch documents.json --output runs/planned \
+uv run --env-file .env scirelay batch documents.json --output runs/planned \
   --optional-modules future_outlook --defer-modules future_outlook
 
 # 取消可选和延后策略，补齐为全部模块完整
-uv run --env-file .env scienceengine batch documents.json --output runs/planned
+uv run --env-file .env scirelay batch documents.json --output runs/planned
 ```
 
 第一轮其他必需模块成功后为 `complete_with_gaps`。已有成功缓存的延后模块仍会读入；只设 optional 不会阻止调用，只设 deferred 也不会把必需缺项变成成功。
@@ -222,7 +239,7 @@ uv run --env-file .env scienceengine batch documents.json --output runs/planned
 ### 跨论文调度与续跑
 
 ```python
-from scienceengine import ModelConfig, ScienceClient
+from scirelay import ModelConfig, ScienceClient
 
 client = ScienceClient(
     ModelConfig.from_env(),
@@ -250,7 +267,7 @@ Python 映射中的相对路径以当前工作目录为基准；只有 CLI 清�
 <summary><strong>单篇、多模块与单接口调用</strong></summary>
 
 ```python
-from scienceengine import ModelConfig, ScienceClient
+from scirelay import ModelConfig, ScienceClient
 
 client = ScienceClient(ModelConfig.from_env())
 
@@ -269,7 +286,7 @@ future = client.extract("future_outlook", "prepared/paper-a/full.md")
 先编辑 [领域配置示例](schemas/domain-config.example.json)，定义 `domain_id`、`version`、`scope` 和 `categories`，再执行：
 
 ```bash
-uv run --env-file .env scienceengine domain prepared/paper-a/blocks.json \
+uv run --env-file .env scirelay domain prepared/paper-a/blocks.json \
   --config schemas/domain-config.example.json --output runs/domain/paper-a
 ```
 
@@ -280,7 +297,7 @@ uv run --env-file .env scienceengine domain prepared/paper-a/blocks.json \
 ```python
 import json
 from pathlib import Path
-from scienceengine import DomainExtractor, ModelConfig
+from scirelay import DomainExtractor, ModelConfig
 
 config = json.loads(Path("schemas/domain-config.example.json").read_text())
 result = DomainExtractor(ModelConfig.from_env()).run(
