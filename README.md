@@ -64,10 +64,10 @@ SciRelay 是一个可独立使用的文献处理调用包：通过 MinerU 处理
 
 ### 安装与配置
 
-仓库为私有仓库，需要 GitHub 访问权限。包名是 `scirelay`，Python 导入名和命令名为 `scirelay`；尚未发布到 PyPI。
+仓库已公开，无需邀请即可查看、克隆和通过 Git 安装。包名是 `scirelay`，Python 导入名和命令名为 `scirelay`；尚未发布到 PyPI。
 
 ```bash
-git clone git@github.com:JYao-Chen/scirelay.git
+git clone https://github.com/JYao-Chen/scirelay.git
 cd scirelay
 uv sync --locked
 cp .env.example .env
@@ -94,7 +94,7 @@ SDK 不自动读取 `.env`；下文通过 `uv run --env-file .env` 加载，也�
 在其他 Python 项目中安装：
 
 ```bash
-uv add "scirelay @ git+ssh://git@github.com/JYao-Chen/scirelay.git"
+uv add "scirelay @ git+https://github.com/JYao-Chen/scirelay.git"
 ```
 
 Git 安装取得已推送的版本。使用尚未推送的本地改动时，可在目标项目通过 `uv add /absolute/path/to/scirelay` 安装本地包。

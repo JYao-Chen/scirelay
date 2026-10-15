@@ -1316,7 +1316,7 @@ for category in core_fields:
   errors.py      # 错误上下文与已知凭据脱敏
   cli.py         # 命令行适配，不复制业务逻辑
 </code></pre>
-<p>最小开发验证见根 README。测试不调用真实模型；本地 HTTP 集成测试覆盖 multipart 之外的 MinerU 上传/轮询/ZIP 下载实际 requests 路径。构建 wheel 后可安装到其他应用；私有仓库访问权限由 GitHub 管理。</p>
+<p>最小开发验证见根 README。测试不调用真实模型；本地 HTTP 集成测试覆盖 multipart 之外的 MinerU 上传/轮询/ZIP 下载实际 requests 路径。构建 wheel 后可安装到其他应用；仓库已公开，可通过 HTTPS 克隆或 Git 依赖安装，无需协作者邀请。</p>
 <h2 id="_2">批量队列与慢模块策略</h2>
 <p><code>ScienceClient</code> 新增 <code>module_timeouts</code>、<code>max_concurrency</code>、<code>module_limits</code> 构造参数；<code>run</code> 新增 <code>optional_modules</code>、<code>deferred_modules</code>，并提供 <code>run_batch(documents, output, ...)</code>。详细参数、状态、续跑兼容约束与示例见 <a href="10-批量调度与慢模块.md">第10章</a>。</p>
 <hr />
