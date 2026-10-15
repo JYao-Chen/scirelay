@@ -29,3 +29,7 @@ uv run python examples/read_results.py examples/extraction_result.example.json
 ```
 
 read_results.py 不请求网络，展示如何递归读取分组与实验对象。schema 描述结构，不代表科学语义已验证。
+
+## 跨论文队列与延后补跑
+
+已适配文档可用 `examples/batch.py documents.json --output runs/batch`，五个模块同等轮转并自动识别疑似阻塞。增加 `--fast-first` 将慢模块未发出的任务延后，随后去掉该参数显式补缺。必需模块缺失时返回 partial，不隐瞒缺项。清单格式与调度规则见 [批量调度文档](../docs/10-批量调度与慢模块.md)。端到端 `pipeline.py` 支持 `--blocked-action defer`。

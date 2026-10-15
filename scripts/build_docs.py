@@ -8,7 +8,7 @@ import markdown
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 chapters = sorted(DOCS.glob("[0-9][0-9]-*.md"))
-intro = """# ScienceEngine 文献知识抽取模块\n\n完整接口与开发手册 · 更新于 2026-09-19\n\n本手册面向通用 App 开发，介绍外部接口、两阶段领域抽取与前后端集成，单列尚未实现的任务 API 设计。\n\n[TOC]\n\n"""
+intro = """# ScienceEngine 文献知识抽取模块\n\n完整接口与开发手册 · 更新于 2026-10-15\n\n本手册面向通用 App 开发，介绍外部接口、两阶段领域抽取与前后端集成，单列尚未实现的任务 API 设计。\n\n[TOC]\n\n"""
 combined = intro + "\n\n---\n\n".join(p.read_text(encoding="utf-8") for p in chapters)
 (DOCS / "开发手册.md").write_text(combined, encoding="utf-8")
 body = markdown.markdown(

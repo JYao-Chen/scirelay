@@ -70,3 +70,8 @@ src/scienceengine/
 ```
 
 最小开发验证见根 README。测试不调用真实模型；本地 HTTP 集成测试覆盖 multipart 之外的 MinerU 上传/轮询/ZIP 下载实际 requests 路径。构建 wheel 后可安装到其他应用；私有仓库访问权限由 GitHub 管理。
+
+
+## 批量队列与慢模块策略
+
+`ScienceClient` 新增 `module_timeouts`、`max_concurrency`、`module_limits` 构造参数；`run` 新增 `optional_modules`、`deferred_modules`，并提供 `run_batch(documents, output, ...)`。详细参数、状态、续跑兼容约束与示例见 [第10章](10-批量调度与慢模块.md)。
