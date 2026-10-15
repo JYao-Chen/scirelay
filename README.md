@@ -1,6 +1,6 @@
 <div align="center">
 
-# SciRelay
+<img src="docs/assets/scirelay-cover.png" alt="scirelay — papers to structured knowledge" width="880">
 
 **文献 OCR · 通用分析 · 可配置领域抽取**
 
@@ -16,24 +16,9 @@ SciEngine 的非官方调用 SDK，包含 MinerU OCR 与可配置领域抽取。
 
 ---
 
-## 名称与迁移
-
-**SciRelay** 是本项目，**SciEngine** 是它调用的外部通用分析服务。两者分别维护，本项目不是 SciEngine 官方 SDK，也不包含服务端实现。
-
-v0.3.0 起统一更名：仓库 `JYao-Chen/scirelay`、安装包 `scirelay`、导入名 `scirelay`、命令 `scirelay`。旧版 `scienceengine-client` / `scienceengine` 不提供兼容入口，使用方需更新依赖、导入与启动命令。通用客户端类仍叫 `ScienceClient`；公共异常改为 `SciRelayError`。
-
-已有克隆更新远端地址即可；本地目录名不影响包名，无需移动目录：
-
-```bash
-git remote set-url origin git@github.com:JYao-Chen/scirelay.git
-uv sync --locked
-```
-
-成功缓存的数据结构未因更名变化，仍受输入、模型、服务和模块集合的一致性检查约束。
-
 ## 适用范围
 
-SciRelay 是一个可独立使用的文献处理调用包：通过 MinerU 处理 PDF，调用外部 SciEngine 服务完成五类通用分析，也可直接调用模型，按业务字段配置执行两阶段领域抽取。
+scirelay 是一个可独立使用的文献处理调用包：通过 MinerU 处理 PDF，调用外部 SciEngine 服务完成五类通用分析，也可直接调用模型，按业务字段配置执行两阶段领域抽取。
 
 已有 OCR 文档时可以直接抽取；只需要通用分析时，不必配置领域字段。SDK 提供类接口、命令行、批量示例和本地文件缓存，不启动 Web 服务。
 
